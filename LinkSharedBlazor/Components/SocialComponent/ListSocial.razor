@@ -1,0 +1,52 @@
+﻿@page "/social"
+@inject SocialServices SocialServices
+
+<div class="d-flex">
+    <MudItem xs="12" sm="6" md="4">
+        <MudTextField Label="SocialName"
+                      @bind-Value="Social.SocialName" For="@(() => Social.SocialName)" />
+    </MudItem>
+    <MudButton Variant="Variant.Filled" OnClick="HandleAddSocial" Color="Color.Primary">Thêm</MudButton>
+</div>
+   
+    <MudTable Items="@Socials" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Created At</MudTh>
+            <MudTh>Name</MudTh> 
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Link">@context.Id</MudTd>
+            <MudTd DataLabel="createdAt">@context.CreatedAt</MudTd>
+            @if (_isEdit&&context.Id==_socialId)
+            {
+                <MudTextField AutoFocus="true" 
+                              @bind-Value="context.SocialName" @onfocusout="@(async()=> {await SocialServices.UpdateAsync(context); _isEdit = false; })"/>
+            }
+            else
+            {
+                <MudTd DataLabel="Name">@context.SocialName <MudIconButton Class="float-right" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=> { _isEdit = !_isEdit; _socialId = context.Id; })"></MudIconButton></MudTd>
+            }
+            
+        </RowTemplate>
+    </MudTable>
+
+
+@code {
+    List<Social> Socials = new List<Social>();  
+    Social Social = new Social();
+    int _socialId;
+    bool _loading = true;
+    bool _isEdit;
+     
+    private async Task HandleAddSocial()
+    {
+        await SocialServices.AddAsync(Social);
+        Socials.Add(Social); 
+    } 
+    protected async override Task OnInitializedAsync()
+    {
+        Socials = await SocialServices.GetAllAsync();
+        _loading = false;
+    }
+}

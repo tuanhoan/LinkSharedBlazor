@@ -1,0 +1,30 @@
+﻿@inject BaseServices<User>  UserServices
+<div style="max-width: 400px;">
+    <EditForm Model="@User" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <MudCard>
+            <MudCardContent>
+                <MudTextField Label="Name" HelperText="Max. 8 characters"
+                              @bind-Value="User.Name" For="@(() => User.Name)" />
+                <MudTextField Label="Email" Class="mt-3"
+                              @bind-Value="User.Email" For="@(() => User.Email)" /> 
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+            </MudCardActions>
+        </MudCard>  
+    </EditForm>
+</div>
+@code { 
+    User User = new User();
+    bool success;
+
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        success = true;
+        await UserServices.AddAsync(User);
+        StateHasChanged();
+    }
+
+}
