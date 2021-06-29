@@ -40,7 +40,7 @@ namespace LinkSharedBlazor
               );
             services.AddRazorPages(); 
             services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
-            //services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            //services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<LinkSharedUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddSingleton<WeatherForecastService>();
             //services.AddScoped<BaseServices<User>, UserServices>();

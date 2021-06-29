@@ -1,4 +1,5 @@
-﻿@inject SignInManager<IdentityUser> SignInManager
+﻿@inject SignInManager<LinkSharedUser> SignInManager
+@using LinkSharedBlazor.Areas.Identity.Data
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
