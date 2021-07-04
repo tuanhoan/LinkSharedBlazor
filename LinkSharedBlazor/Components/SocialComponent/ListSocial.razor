@@ -2,10 +2,10 @@
 @inject SocialServices SocialServices
 
 <div class="d-flex">
-    <MudItem xs="12" sm="6" md="4">
-        <MudTextField Label="SocialName"
-                      @bind-Value="Social.SocialName" For="@(() => Social.SocialName)" />
-    </MudItem>
+    <MudTextField Label="SocialName"
+                  @bind-Value="Social.SocialName" For="@(() => Social.SocialName)" />
+    <MudTextField Label="Icon"
+                  @bind-Value="Social.Icon" For="@(() => Social.Icon)" />
     <MudButton Variant="Variant.Filled" OnClick="HandleAddSocial" Color="Color.Primary">Thêm</MudButton>
 </div>
    

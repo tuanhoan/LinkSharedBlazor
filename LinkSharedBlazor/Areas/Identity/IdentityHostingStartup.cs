@@ -18,7 +18,7 @@ namespace LinkSharedBlazor.Areas.Identity
         {
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<LinkSharedIdentityContext>(options =>
-                    options.UseSqlServer(
+                    options.UseNpgsql(
                         context.Configuration.GetConnectionString("DefaultConnection"))); 
                 services.AddIdentity<LinkSharedUser, IdentityRole>(options =>
                 {

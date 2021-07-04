@@ -1,8 +1,7 @@
-﻿@page "/link/{UserId:int}"
+﻿@page "/link/{UserId}"
 @inject LinkServices LinkServices
 @inject SocialServices SocialServices
 @inject NavigationManager NavigationManager
-
 <div class="container-fluid">
     <div class="d-flex">
         <MudItem xs="12" sm="6" md="4" Class="mr-2">
@@ -19,6 +18,7 @@
         </MudItem>
         <MudButton Size="Size.Small" Variant="Variant.Filled" OnClick="HandleAddLink" Color="Color.Primary">Thêm</MudButton>
     </div>
+    <br />
     @foreach (var item in Links)
     {
         @if (_isEdit && _socialId == item.SocialId)
@@ -28,33 +28,41 @@
         }
         else
         {
-<div class="row">
-    <a href="@item.SocialLink" target="_blank" class="col-11">
-        <MudButton Class="mb-3"
-                   Variant="Variant.Filled"
-                   Color="Color.Primary"
-                   FullWidth="true">
-            @item.SocialNavigation.SocialName
-        </MudButton>
-    </a>
-    <div class="col-1 d-flex">
-        <MudIconButton  Icon="@Icons.Material.Filled.Edit" OnClick="@(()=> { _isEdit = !_isEdit; _socialId = item.SocialId; })">
-        </MudIconButton>
-        <MudIconButton  Icon="@Icons.Material.Filled.Delete" OnClick="@(async ()=> { _socialId = item.SocialId;
+            <div class="container">
+                <a href="@item.SocialLink" target="_blank">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">@item.SocialNavigation.SocialName</div>
+                    </div>
+                </a>
+                <br>
+            </div>
+            @*<div class="row">
+                <a href="@item.SocialLink" target="_blank" class="col-11">
+                    <MudButton Class="mb-3"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               FullWidth="true">
+                        @item.SocialNavigation.SocialName
+                    </MudButton>
+                </a>
+                <div class="col-1 d-flex">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(()=> { _isEdit = !_isEdit; _socialId = item.SocialId; })">
+                    </MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(async ()=> { _socialId = item.SocialId;
                                                                             await LinkServices.DeleteAsync(_socialId, UserId);
                                                                             Links.Remove(item);
                                                                             Socials.Add(await SocialServices.GetByIdAsync(_socialId));
                                                                         })">
-        </MudIconButton>
-    </div>
+                    </MudIconButton>
+                </div>
 
-</div>
+            </div>*@
         }
     }
 </div>
 
 @code {
-    [Parameter] public int UserId { get; set; }
+    [Parameter] public string UserId { get; set; }
     List<Social> Socials = new();
     List<Link> Links = new();
     Link _link = new();
@@ -65,7 +73,7 @@
 
     async Task HandleAddLink()
     {
-        _link.UserId = UserId;
+        _link.UserId =Guid.Parse(UserId);
         await LinkServices.AddAsync(_link);
         Socials.Remove(Socials.FirstOrDefault(x => x.Id == _link.SocialId));
         Links.Add(_link);
@@ -75,7 +83,7 @@
     protected async override Task OnInitializedAsync()
     {
 
-        Links = await LinkServices.GetByUserIdAsync(UserId);
+        Links = await LinkServices.GetByUserIdAsync(Guid.Parse(UserId));
         Socials = await SocialServices.GetAllAsync();
         foreach (var item in Links)
         {

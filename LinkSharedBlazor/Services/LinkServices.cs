@@ -22,7 +22,7 @@ namespace LinkSharedBlazor.Services
                 .Include(x=>x.UserNavigation)
                 .ToListAsync();
         }
-        public async Task<List<Link>> GetByUserIdAsync(int userId)
+        public async Task<List<Link>> GetByUserIdAsync(Guid userId)
         {
             return await _context.Links
                 .Include(x => x.SocialNavigation)
@@ -42,7 +42,7 @@ namespace LinkSharedBlazor.Services
             _context.Links.Update(link);
             await _context.SaveChangesAsync();
         }
-        public async Task DeleteAsync(int socialId, int userId)
+        public async Task DeleteAsync(int socialId, Guid userId)
         {
             _context.Remove(_context.Links.FirstOrDefault(x => x.SocialId == socialId && x.UserId == userId));
             await _context.SaveChangesAsync();

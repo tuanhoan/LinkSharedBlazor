@@ -8,7 +8,7 @@ namespace LinkSharedBlazor.Models
     public class Link
     {
         public int SocialId { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
         public string SocialLink { get; set; } 
         public DateTime CreatedAt { get; set; }
         public virtual Social SocialNavigation { get; set; }

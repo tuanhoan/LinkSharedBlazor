@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject UserServices UserServices
 
 <div class="page">
     <div class="sidebar">
@@ -12,7 +13,31 @@
         </div>
 
         <div class="content px-4">
-            @Body
+            <CascadingValue Value="CascadedUser">
+                @Body
+            </CascadingValue>
         </div>
     </div>
 </div>
+
+@code{ 
+    User CascadedUser;
+
+    protected override void OnInitialized()
+    {
+        CascadedUser = UserServices.GetCurrentEmployee();
+        var works = CascadedUser?.Name.Split(" ");
+
+        //if (works != null)
+        //{
+        //    if (works.Length > 1)
+        //    {
+        //        _userName = works[works.Length - 2] + " " + works[works.Length - 1];
+        //    }
+        //    else
+        //    {
+        //        _userName = works[works.Length - 1];
+        //    }
+        //}
+    }
+}
