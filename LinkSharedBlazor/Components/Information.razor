@@ -1,11 +1,85 @@
-﻿@*@page "/info/{UserId}"*@
+﻿@page "/info/{UserId}"
+@inject ISnackbar Snackbar
+@inject LinkServices LinkServices
+@inject SocialServices SocialServices
 
-<h3>Information</h3>
 
-@code {
+<div class="d-flex">
+    <MudItem xs="12" sm="6" md="4" Class="mr-2">
+        <MudSelect T="int" Strict="true" OffsetY="true" Variant="Variant.Outlined" Label="SocialName" @bind-Value="@_link.SocialId">
+            @foreach (var item in Socials)
+            {
+                <MudSelectItem Value="@item.Id">@item.SocialName</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="4" Class="mr-2">
+        <MudTextField Label="Link" Variant="Variant.Outlined"
+                      @bind-Value="_link.SocialLink" />
+    </MudItem>
+    <MudButton Size="Size.Small" Variant="Variant.Filled" OnClick="HandleAddLink" Color="Color.Primary">Thêm</MudButton>
+</div>
+<br />
+<MudTable Items="@Links" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Mạng xã hội</MudTh>
+        <MudTh>Link</MudTh>
+        <MudTh>Action</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.SocialNavigation.SocialName</MudTd>
+        @if (_isEdit == true && _socialId == context.SocialId)
+        {
+            <MudTd DataLabel="Sign"><MudTextField AutoFocus="true" @bind-Value="context.SocialLink" @onfocusout="@(_ =>  LinkServices.UpdateAsync(context))"></MudTextField></MudTd>
+        }
+        else
+        {
+            <MudTd DataLabel="Sign">@context.SocialLink</MudTd>
+        }
+        <MudTd DataLabel="Name">
+            <MudButton OnClick="@(()=> {
+                                      _isEdit = true;
+                                      _socialId = context.SocialId;
+                                  })">Sửa</MudButton>
+            <MudButton OnClick="@(_=>LinkServices.DeleteAsync(context.SocialId, Guid.Parse(UserId)))"
+                       >Xóa</MudButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
 
-}
-
-@code{ 
+@code{
     [Parameter] public string UserId { get; set; }
+    List<Social> Socials = new();
+    List<Link> Links = new();
+    Link _link = new();
+    int _socialId;
+    bool _isEdit;
+    User User = new User();
+    public bool _loading;
+
+    async Task HandleAddLink()
+    {
+        _link.UserId = Guid.Parse(UserId);
+        await LinkServices.AddAsync(_link);
+        Socials.Remove(Socials.FirstOrDefault(x => x.Id == _link.SocialId));
+        Links.Add(_link);
+        _link = new Link();
+    }
+    protected async override Task OnInitializedAsync()
+    {
+        Links = await LinkServices.GetByUserIdAsync(Guid.Parse(UserId));
+        Socials = await SocialServices.GetAllAsync();
+        foreach (var item in Links)
+        {
+            var social = Socials.FirstOrDefault(x => x.Id == item.SocialId);
+            if (social != null)
+            {
+                Socials.Remove(social);
+            }
+        }
+        if (Links != null)
+        {
+            _loading = true;
+        }
+    }
 }

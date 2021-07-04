@@ -1,9 +1,13 @@
 ﻿@inherits LayoutComponentBase
 @inject UserServices UserServices
 
+
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <CascadingValue Value="CascadedUser">
+            <NavMenu />
+        </CascadingValue>
+        
     </div>
 
     <div class="main">
@@ -12,11 +16,15 @@
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
-        <div class="content px-4">
-            <CascadingValue Value="CascadedUser">
-                @Body
-            </CascadingValue>
-        </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="content px-4">
+                    <CascadingValue Value="CascadedUser">
+                        @Body
+                    </CascadingValue>
+                </div>
+            </Authorized>
+        </AuthorizeView>
     </div>
 </div>
 

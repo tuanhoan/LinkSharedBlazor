@@ -1,0 +1,69 @@
+﻿@page "/link/{UserId}"
+@inject LinkServices LinkServices
+@layout EmptyLayout
+@inject SocialServices SocialServices
+@inject NavigationManager NavigationManager
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="container-fluid" style="background-image: url('~/background.png'); ">
+            <br />
+            <br />
+            @foreach (var item in Links)
+            {
+            <div class="container">
+                <a href="@item.SocialLink" target="_blank">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body font-weight-bold text-center">@item.SocialNavigation.SocialName <p></p></div>
+                    </div>
+                </a>
+                <br>
+            </div>
+            }
+        </div>
+    </NotAuthorized>
+    <Authorized>
+        <div class="container-fluid" style="background-image: url('~/background.png'); ">
+            <br />
+            <br />
+            @foreach (var item in Links)
+            {
+            <div class="container">
+                <a href="@item.SocialLink" target="_blank">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body font-weight-bold text-center">@item.SocialNavigation.SocialName <p></p></div>
+                    </div>
+                </a>
+                <br>
+            </div>
+            }
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    [Parameter] public string UserId { get; set; }
+    List<Social> Socials = new();
+    List<Link> Links = new();
+    Link _link = new();
+    int _socialId;
+    bool _isEdit;
+
+
+
+    async Task HandleAddLink()
+    {
+        _link.UserId = Guid.Parse(UserId);
+        await LinkServices.AddAsync(_link);
+        Socials.Remove(Socials.FirstOrDefault(x => x.Id == _link.SocialId));
+        Links.Add(_link);
+        _link = new Link();
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        Links = await LinkServices.GetByUserIdAsync(Guid.Parse(UserId));
+
+    }
+}

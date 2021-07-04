@@ -2,28 +2,9 @@
 @inject UserServices UserServices
 @inject NavigationManager NavigationManager
 
-<MudButton OnClick="@(()=>_isAdd=!_isAdd)" Variant="Variant.Filled" Color="Color.Primary">Thêm</MudButton>
-@if (_isAdd)
-{
-    <div style="max-width: 400px;">
-        <EditForm Model="@User" OnValidSubmit="OnValidSubmit">
-            <DataAnnotationsValidator />
-            <MudCard>
-                <MudCardContent>
-                    <MudTextField Label="Name" HelperText="Max. 8 characters"
-                                  @bind-Value="User.Name" For="@(() => User.Name)" />
-                    <MudTextField Label="Email" Class="mt-3"
-                                  @bind-Value="User.Email" For="@(() => User.Email)" />
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Thêm</MudButton>
-                </MudCardActions>
-            </MudCard>
-        </EditForm>
-    </div>
-}
-else
-{
+
+ 
+
     <MudTable Items="@Users" Filter="new Func<User,bool>(FilterFunc)">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Periodic Elements</MudText>
@@ -48,12 +29,10 @@ else
             <MudTablePager />
         </PagerContent>
     </MudTable>
-}
 
 
 @code {
     List<User> Users = new List<User>();
-    private bool _isAdd = false;
     private string searchString = "";
     User User = new User();
 
@@ -71,8 +50,7 @@ else
     private async Task OnValidSubmit(EditContext context)
     {
         await UserServices.AddAsync(User);
-        Users.Add(User);
-        _isAdd = false;
+        Users.Add(User); 
     }
     protected async override Task OnInitializedAsync()
     {

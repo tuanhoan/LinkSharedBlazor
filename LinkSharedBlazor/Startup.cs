@@ -36,7 +36,7 @@ namespace LinkSharedBlazor
         {
             services.AddMudServices();
             services.AddDbContextFactory<LinkSharedContext>(options =>
-                  options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+                  options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
               );
             services.AddRazorPages(); 
             services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
