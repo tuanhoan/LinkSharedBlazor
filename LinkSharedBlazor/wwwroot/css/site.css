@@ -6,6 +6,7 @@ html, body {
 
 a, .btn-link {
     color: #0366d6;
+    text-decoration: none;
 }
 
 .btn-primary {
@@ -29,7 +30,6 @@ a, .btn-link {
 .validation-message {
     color: red;
 }
-
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;

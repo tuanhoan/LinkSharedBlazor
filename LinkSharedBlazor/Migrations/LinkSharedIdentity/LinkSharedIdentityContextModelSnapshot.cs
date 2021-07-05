@@ -4,16 +4,14 @@ using LinkSharedBlazor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LinkSharedBlazor.Migrations
+namespace LinkSharedBlazor.Migrations.LinkSharedIdentity
 {
     [DbContext(typeof(LinkSharedIdentityContext))]
-    [Migration("20210704090958_Init")]
-    partial class Init
+    partial class LinkSharedIdentityContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,22 +116,22 @@ namespace LinkSharedBlazor.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e615bc36-730f-4083-9ea2-704361ea64a7",
-                            ConcurrencyStamp = "3add999e-e18a-4467-9d4c-fe31613f7297",
+                            Id = "92e29493-a812-46c0-8442-5c2d6869cffb",
+                            ConcurrencyStamp = "adede03b-5dbc-468c-8633-8971db6bcf08",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "1bd1aaf9-a693-4da5-bec8-b3d1a7fee50b",
-                            ConcurrencyStamp = "c48d1a43-cf15-4b4f-960c-a953a76c3007",
+                            Id = "465b69c3-5a66-40f3-8e73-17f86337dc11",
+                            ConcurrencyStamp = "f67449c1-83f2-4dc2-9647-a20eb476f620",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "3bdb5fbf-de83-41e0-b3ed-bd9ef99ee841",
-                            ConcurrencyStamp = "3510d9e7-ff33-47c4-bed9-b9f147c6dcc3",
+                            Id = "b09d4bd4-8b6b-4c2d-b619-23bada8b58c6",
+                            ConcurrencyStamp = "8390b253-95eb-4fc1-845a-eb140e1a36c3",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         });

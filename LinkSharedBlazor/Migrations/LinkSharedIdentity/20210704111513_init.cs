@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace LinkSharedBlazor.Migrations
+namespace LinkSharedBlazor.Migrations.LinkSharedIdentity
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -156,17 +156,17 @@ namespace LinkSharedBlazor.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "e615bc36-730f-4083-9ea2-704361ea64a7", "3add999e-e18a-4467-9d4c-fe31613f7297", "User", "USER" });
+                values: new object[] { "92e29493-a812-46c0-8442-5c2d6869cffb", "adede03b-5dbc-468c-8633-8971db6bcf08", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "1bd1aaf9-a693-4da5-bec8-b3d1a7fee50b", "c48d1a43-cf15-4b4f-960c-a953a76c3007", "Admin", "ADMIN" });
+                values: new object[] { "465b69c3-5a66-40f3-8e73-17f86337dc11", "f67449c1-83f2-4dc2-9647-a20eb476f620", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "3bdb5fbf-de83-41e0-b3ed-bd9ef99ee841", "3510d9e7-ff33-47c4-bed9-b9f147c6dcc3", "Guest", "GUEST" });
+                values: new object[] { "b09d4bd4-8b6b-4c2d-b619-23bada8b58c6", "8390b253-95eb-4fc1-845a-eb140e1a36c3", "Guest", "GUEST" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

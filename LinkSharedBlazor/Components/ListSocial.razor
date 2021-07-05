@@ -2,10 +2,14 @@
 @inject SocialServices SocialServices
 
 <div class="d-flex">
-    <MudTextField Label="SocialName"
+    <MudTextField Label="SocialName" 
                   @bind-Value="Social.SocialName" For="@(() => Social.SocialName)" />
-    <MudTextField Label="Icon"
-                  @bind-Value="Social.Icon" For="@(() => Social.Icon)" />
+   
+        <MudTextField Label="Icon"
+                      @bind-Value="Social.Icon" For="@(() => Social.Icon)" />
+    
+
+
     <MudButton Variant="Variant.Filled" OnClick="HandleAddSocial" Color="Color.Primary">Thêm</MudButton>
 </div>
    
@@ -13,21 +17,29 @@
         <HeaderContent>
             <MudTh>Id</MudTh>
             <MudTh>Created At</MudTh>
-            <MudTh>Name</MudTh> 
+            <MudTh>Name</MudTh>
+            <MudTh>Icon</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Link">@context.Id</MudTd>
             <MudTd DataLabel="createdAt">@context.CreatedAt</MudTd>
-            @if (_isEdit&&context.Id==_socialId)
+
+
+            @if (_isEdit && context.Id == _socialId)
             {
-                <MudTextField AutoFocus="true" 
-                              @bind-Value="context.SocialName" @onfocusout="@(async()=> {await SocialServices.UpdateAsync(context); _isEdit = false; })"/>
+
+                <MudTextField AutoFocus="true"
+                              @bind-Value="context.SocialName" @onfocusout="@(async () => { await SocialServices.UpdateAsync(context); _isEdit = false; })" />
+               
             }
             else
             {
-                <MudTd DataLabel="Name">@context.SocialName <MudIconButton Class="float-right" Icon="@Icons.Material.Filled.Edit" OnClick="@(()=> { _isEdit = !_isEdit; _socialId = context.Id; })"></MudIconButton></MudTd>
+
+                <MudTd DataLabel="Name">@context.SocialName </MudTd>
+                <MudTd DataLabel="icon">@context.Icon</MudTd>
+                <MudIconButton Class="float-right" Icon="@Icons.Material.Filled.Edit" OnClick="@(() => { _isEdit = !_isEdit; _socialId = context.Id; })"></MudIconButton>
+
             }
-            
         </RowTemplate>
     </MudTable>
 
@@ -38,6 +50,7 @@
     int _socialId;
     bool _loading = true;
     bool _isEdit;
+    string Social_name;
 
     private async Task HandleAddSocial()
     {
