@@ -20,7 +20,7 @@
     <MudButton Size="Size.Small" Variant="Variant.Filled" OnClick="HandleAddLink" Color="Color.Primary">Thêm</MudButton>
 </div>
 <br />
-<MudTable Items="@Links" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+<MudTable Items="@Links" Hover="true" Breakpoint="Breakpoint.Sm">
     <HeaderContent>
         <MudTh>Mạng xã hội</MudTh>
         <MudTh>Link</MudTh>
@@ -30,7 +30,7 @@
         <MudTd DataLabel="Nr">@context.SocialNavigation.SocialName</MudTd>
         @if (_isEdit == true && _socialId == context.SocialId)
         {
-            <MudTd DataLabel="Sign"><MudTextField AutoFocus="true" @bind-Value="context.SocialLink" @onfocusout="@(_ =>  LinkServices.UpdateAsync(context))"></MudTextField></MudTd>
+            <MudTd DataLabel="Sign"><MudTextField AutoFocus="true" @bind-Value="context.SocialLink" @onfocusout="@(async _ => { await LinkServices.UpdateAsync(context); _isEdit = false; })"></MudTextField></MudTd>
         }
         else
         {
@@ -47,6 +47,7 @@
     </RowTemplate>
 </MudTable>
 
+
 @code{
     [Parameter] public string UserId { get; set; }
     List<Social> Socials = new();
@@ -54,8 +55,7 @@
     Link _link = new();
     int _socialId;
     bool _isEdit;
-    User User = new User();
-    public bool _loading;
+    User User = new User(); 
 
     async Task HandleAddLink()
     {
@@ -76,10 +76,6 @@
             {
                 Socials.Remove(social);
             }
-        }
-        if (Links != null)
-        {
-            _loading = true;
-        }
+        } 
     }
 }

@@ -2,46 +2,48 @@
 @inject SocialServices SocialServices
 
 <div class="d-flex">
-    <MudTextField Label="SocialName" 
+    <MudTextField Label="SocialName"
                   @bind-Value="Social.SocialName" For="@(() => Social.SocialName)" />
-   
-        <MudTextField Label="Icon"
-                      @bind-Value="Social.Icon" For="@(() => Social.Icon)" />
-    
+
+    <MudTextField Label="Icon"
+                  @bind-Value="Social.Icon" For="@(() => Social.Icon)" />
+
 
 
     <MudButton Variant="Variant.Filled" OnClick="HandleAddSocial" Color="Color.Primary">Thêm</MudButton>
 </div>
-   
-    <MudTable Items="@Socials" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
-        <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Created At</MudTh>
-            <MudTh>Name</MudTh>
-            <MudTh>Icon</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Link">@context.Id</MudTd>
-            <MudTd DataLabel="createdAt">@context.CreatedAt</MudTd>
+
+<MudTable Items="@Socials" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Created At</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Icon</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Link">@context.Id</MudTd>
+        <MudTd DataLabel="createdAt">@context.CreatedAt</MudTd>
 
 
-            @if (_isEdit && context.Id == _socialId)
-            {
+        @if (_isEdit && context.Id == _socialId)
+        {
 
-                <MudTextField AutoFocus="true"
-                              @bind-Value="context.SocialName" @onfocusout="@(async () => { await SocialServices.UpdateAsync(context); _isEdit = false; })" />
-               
-            }
-            else
-            {
+            <MudTextField AutoFocus="true"
+                          @bind-Value="context.SocialName" />
+            <MudTextField AutoFocus="true"
+                          @bind-Value="context.Icon" />
+            <MudIconButton Icon="@Icons.Material.Filled.Done" OnClick="async () => { await SocialServices.UpdateAsync(context); _isEdit = false; }" aria-label="done"></MudIconButton>
+        }
+        else
+        {
 
-                <MudTd DataLabel="Name">@context.SocialName </MudTd>
-                <MudTd DataLabel="icon">@context.Icon</MudTd>
-                <MudIconButton Class="float-right" Icon="@Icons.Material.Filled.Edit" OnClick="@(() => { _isEdit = !_isEdit; _socialId = context.Id; })"></MudIconButton>
+            <MudTd DataLabel="Name">@context.SocialName </MudTd>
+            <MudTd DataLabel="icon">@context.Icon</MudTd>
+            <MudIconButton Class="float-right" Icon="@Icons.Material.Filled.Edit" OnClick="@(() => { _isEdit = !_isEdit; _socialId = context.Id; })"></MudIconButton>
 
-            }
-        </RowTemplate>
-    </MudTable>
+        }
+    </RowTemplate>
+</MudTable>
 
 
 @code {
@@ -60,6 +62,6 @@
     protected async override Task OnInitializedAsync()
     {
         Socials = await SocialServices.GetAllAsync();
-        _loading = false; 
+        _loading = false;
     }
 }
