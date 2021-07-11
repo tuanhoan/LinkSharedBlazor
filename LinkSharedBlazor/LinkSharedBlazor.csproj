@@ -20,8 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\FullLinkComponent\" />
-    <Folder Include="Components\SocialComponent\" />
     <Folder Include="wwwroot\Icon\" />
   </ItemGroup>
 

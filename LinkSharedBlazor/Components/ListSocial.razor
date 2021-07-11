@@ -56,6 +56,11 @@
 
     private async Task HandleAddSocial()
     {
+        //<i class="fab fa-facebook"></i> 
+        //Social.Icon.Replace("\"", "");
+        Social.Icon = Social.Icon.Replace(@"<i class=""", "");
+        Social.Icon = Social.Icon.Replace(@"""></i>", "");
+
         await SocialServices.AddAsync(Social);
         Socials.Add(Social);
     }

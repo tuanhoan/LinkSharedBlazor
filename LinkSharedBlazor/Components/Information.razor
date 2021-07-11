@@ -2,50 +2,90 @@
 @inject ISnackbar Snackbar
 @inject LinkServices LinkServices
 @inject SocialServices SocialServices
-
+@inject NavigationManager NavigationManager
+@inject UserServices UserServices
+@inject Microsoft.AspNetCore.Identity.UserManager<LinkSharedUser> UserManager
+@using LinkSharedBlazor.Areas.Identity.Data
+@using System.ComponentModel.DataAnnotations
 
 <div class="d-flex">
-    <MudItem xs="12" sm="6" md="4" Class="mr-2">
-        <MudSelect T="int" Strict="true" OffsetY="true" Variant="Variant.Outlined" Label="SocialName" @bind-Value="@_link.SocialId">
-            @foreach (var item in Socials)
-            {
-                <MudSelectItem Value="@item.Id">@item.SocialName</MudSelectItem>
-            }
-        </MudSelect>
-    </MudItem>
-    <MudItem xs="12" sm="6" md="4" Class="mr-2">
-        <MudTextField Label="Link" Variant="Variant.Outlined"
-                      @bind-Value="_link.SocialLink" />
-    </MudItem>
-    <MudButton Size="Size.Small" Variant="Variant.Filled" OnClick="HandleAddLink" Color="Color.Primary">Thêm</MudButton>
+    <MudButton Class="mr-5" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>_isInfo = !_isInfo)">@(_isInfo==false? "Chỉnh sửa thông tin":"Quay lại")</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>NavigationManager.NavigateTo("/link/"+UserId))">Truy cập link</MudButton>
 </div>
-<br />
-<MudTable Items="@Links" Hover="true" Breakpoint="Breakpoint.Sm">
-    <HeaderContent>
-        <MudTh>Mạng xã hội</MudTh>
-        <MudTh>Link</MudTh>
-        <MudTh>Action</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Nr">@context.SocialNavigation.SocialName</MudTd>
-        @if (_isEdit == true && _socialId == context.SocialId)
-        {
-            <MudTd DataLabel="Sign"><MudTextField AutoFocus="true" @bind-Value="context.SocialLink" @onfocusout="@(async _ => { await LinkServices.UpdateAsync(context); _isEdit = false; })"></MudTextField></MudTd>
-        }
-        else
-        {
-            <MudTd DataLabel="Sign">@context.SocialLink</MudTd>
-        }
-        <MudTd DataLabel="Name">
-            <MudButton OnClick="@(()=> {
+
+@if (_isInfo)
+{
+    <div style="max-width: 400px;">
+        <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="Họ và tên"
+                                  @bind-Value="User.Name" />
+                    <br />
+                    <MudButton OnClick="@(()=>_isChangePass=!_isChangePass)" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Đổi mật khẩu</MudButton>
+                    @if (_isChangePass)
+                    {
+                        <br />
+                        <MudTextField Label="Mật khẩu"
+                                      @bind-Value="model.NewPassword" InputType="InputType.Password" For="@(() => model.NewPassword)" />
+                        <MudTextField Label="Nhập lại mật khẩu"
+                                      @bind-Value="model.NewPassword" InputType="InputType.Password" For="@(() => model.ReNewPassword)" />
+                    }
+
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton OnClick="ChangePassword" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Cập nhật</MudButton>
+                </MudCardActions>
+            </MudCard>
+
+        </EditForm>
+    </div>
+}
+else
+{
+    <div class="d-flex">
+        <MudItem xs="12" sm="6" md="4" Class="mr-2">
+            <MudSelect T="int" Strict="true" OffsetY="true" Variant="Variant.Outlined" Label="SocialName" @bind-Value="@_link.SocialId">
+                @foreach (var item in Socials)
+                {
+                    <MudSelectItem Value="@item.Id">@item.SocialName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4" Class="mr-2">
+            <MudTextField Label="Link" Variant="Variant.Outlined"
+                          @bind-Value="_link.SocialLink" />
+        </MudItem>
+        <MudButton Size="Size.Small" Variant="Variant.Filled" OnClick="HandleAddLink" Color="Color.Primary">Thêm</MudButton>
+    </div>
+    <br />
+    <MudTable Items="@Links" Hover="true" Breakpoint="Breakpoint.Sm">
+        <HeaderContent>
+            <MudTh>Mạng xã hội</MudTh>
+            <MudTh>Link</MudTh>
+            <MudTh>Hành động</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Mạng xã hội">@context.SocialNavigation.SocialName</MudTd>
+            @if (_isEdit == true && _socialId == context.SocialId)
+            {
+            <MudTd DataLabel="Link"><MudTextField AutoFocus="true" @bind-Value="context.SocialLink" @onfocusout="@(async _ => { await LinkServices.UpdateAsync(context); _isEdit = false; })"></MudTextField></MudTd>
+            }
+            else
+            {
+            <MudTd DataLabel="Link">@context.SocialLink</MudTd>
+            }
+            <MudTd DataLabel="Hành dộng">
+                <MudButton OnClick="@(()=> {
                                       _isEdit = true;
                                       _socialId = context.SocialId;
                                   })">Sửa</MudButton>
-            <MudButton OnClick="@(_=>LinkServices.DeleteAsync(context.SocialId, Guid.Parse(UserId)))"
-                       >Xóa</MudButton>
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+                <MudButton OnClick="@(_=>LinkServices.DeleteAsync(context.SocialId, Guid.Parse(UserId)))">Xóa</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
 
 
 @code{
@@ -55,7 +95,22 @@
     Link _link = new();
     int _socialId;
     bool _isEdit;
-    User User = new User(); 
+    bool _isInfo;
+    bool _isChangePass;
+    PasswordModel model = new PasswordModel();
+    User User = new User();
+    public class PasswordModel
+    {
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        public string NewPassword { get; set; }
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        public string ReNewPassword { get; set; }
+
+    }
 
     async Task HandleAddLink()
     {
@@ -65,10 +120,19 @@
         Links.Add(_link);
         _link = new Link();
     }
+    private async Task OnValidSubmit(EditContext context)
+    {
+        if (_isChangePass && model.NewPassword == model.ReNewPassword)
+        {
+            await ChangePassword();
+        }
+        await UserServices.UpdateAsync(User);
+    }
     protected async override Task OnInitializedAsync()
     {
         Links = await LinkServices.GetByUserIdAsync(Guid.Parse(UserId));
         Socials = await SocialServices.GetAllAsync();
+        User = UserServices.GetCurrentEmployee();
         foreach (var item in Links)
         {
             var social = Socials.FirstOrDefault(x => x.Id == item.SocialId);
@@ -76,6 +140,20 @@
             {
                 Socials.Remove(social);
             }
-        } 
+        }
+    }
+    async Task ChangePassword()
+    {
+        if (_isChangePass && model.NewPassword == model.ReNewPassword)
+        {
+            var user = await UserManager.FindByEmailAsync(User.Email);
+            var token = await UserManager.GeneratePasswordResetTokenAsync(user);
+            await UserManager.ResetPasswordAsync(user, token, model.NewPassword);
+
+        }
+        await UserServices.UpdateAsync(User);
+        Snackbar.Clear();
+        Snackbar.Add("Cập nhật thông tin thành công", Severity.Success);
+
     }
 }

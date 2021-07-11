@@ -34,18 +34,6 @@
     protected override void OnInitialized()
     {
         CascadedUser = UserServices.GetCurrentEmployee();
-        var works = CascadedUser?.Name.Split(" ");
-
-        //if (works != null)
-        //{
-        //    if (works.Length > 1)
-        //    {
-        //        _userName = works[works.Length - 2] + " " + works[works.Length - 1];
-        //    }
-        //    else
-        //    {
-        //        _userName = works[works.Length - 1];
-        //    }
-        //}
+        var works = CascadedUser?.Name.Split(" "); 
     }
 }

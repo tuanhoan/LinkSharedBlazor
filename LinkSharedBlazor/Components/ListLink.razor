@@ -3,26 +3,55 @@
 @layout EmptyLayout
 @inject SocialServices SocialServices
 @inject NavigationManager NavigationManager
-
+ 
 <div style="background-image: linear-gradient(to right, rgba(255,106,106,0.4), rgba(230,230,250,1)); min-height:750px">
-    <AuthorizeView>
-
+    <AuthorizeView> 
         <NotAuthorized>
-            <div class="container-fluid" style="background-image: url('~/background.png'); ">
-                <br />
-                <br />
-                @foreach (var item in Links)
-                {
-                    <div class="container">
-                        <a href="@item.SocialLink" target="_blank">
-                            <div class="card bg-primary text-white">
-                                <div class="card-body font-weight-bold text-center" style="text-decoration:none;"> @item.SocialNavigation.SocialName <p></p></div>
+            @if (!_isLoading)
+            {
+            <div id="circle">
+                <div class="loader">
+                    <div class="loader">
+                        <div class="loader">
+                            <div class="loader">
+
                             </div>
-                        </a>
-                        <br>
+                        </div>
                     </div>
-                }
+                </div>
             </div>
+            }
+            else
+            {
+            @*<div class="container-fluid h-100" style="background-image: linear-gradient(to right, rgba(255,106,106,0.4), rgba(230,230,250,1));">*@
+            <br />
+            <br />
+            <div class="container h-100">
+                <div class="text-center ">
+                    <div class="rounded-circle " style=" width:130px; height:130px; margin-left:auto; margin-right:auto;">
+                        @*Nếu có hình thì không cần div này  chỉ cần thêm class="center-block" vào trong thẻ img*@
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUi5H05NJDJ4DfTp8aCYDI4Br2DLhBJ64OGQ&usqp=CAU" height="130px;" width="130px" alt="hình" class="rounded-circle ">
+                    </div>
+
+                    <h1>@Links.FirstOrDefault()?.UserNavigation?.Name</h1>
+                </div>
+
+                @foreach (var item in Links)
+                        {
+
+                <a href="@item.SocialLink" style="text-decoration:none;" target="_blank">
+                    <div style="background-image: linear-gradient(to right,rgba(255,48,48,0.8), rgba(255, 165,0,0.3));  border: 2px solid white" class="card  text-white  btn-outline-warning ">
+
+                        <div class="card-body font-weight-bold text-center "><MudIcon Icon="@item.SocialNavigation.Icon" Color="Color.Primary" />  @item.SocialNavigation.SocialName </div>
+                    </div>
+                </a>
+                <br>
+
+                        }
+            </div>
+            @*</div>*@
+            }
+
         </NotAuthorized>
         <Authorized>
 

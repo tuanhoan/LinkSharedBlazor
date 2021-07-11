@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 namespace LinkSharedBlazor.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [Authorize(Roles = "Admin")]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<LinkSharedUser> _signInManager;

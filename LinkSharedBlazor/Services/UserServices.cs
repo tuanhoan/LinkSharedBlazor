@@ -12,32 +12,41 @@ namespace LinkSharedBlazor.Services
 {
     public class UserServices
     {
-        private readonly LinkSharedContext _context;
+        private readonly IDbContextFactory<LinkSharedContext> _context;
         readonly AuthenticationStateProvider _authenticationStateProvider;
         public UserServices(IDbContextFactory<LinkSharedContext> context,
             AuthenticationStateProvider authenticationStateProvider)
         {
-            _context = context.CreateDbContext();
+            _context = context;
             _authenticationStateProvider = authenticationStateProvider;
         }
         public string GetCurrentUserEmail()
-        {
+        { 
             var authState = _authenticationStateProvider.GetAuthenticationStateAsync();
             return authState.Result.User.FindFirst(ClaimTypes.Email)?.Value;
         }
         public User GetCurrentEmployee()
         {
+            var context = _context.CreateDbContext();
             var email = GetCurrentUserEmail(); 
-            return _context.Users.FirstOrDefault(f => f.Email == email);
+            return context.Users.FirstOrDefault(f => f.Email == email);
         }
         public async Task AddAsync(User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            var context = _context.CreateDbContext();
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
         }
         public async Task<List<User>> GetAllAsync()
         {
-            return await _context.Users.ToListAsync();
+            var context = _context.CreateDbContext();
+            return await context.Users.ToListAsync();
         } 
+        public async Task UpdateAsync(User user)
+        {
+            var context = _context.CreateDbContext();
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
+        }
     }
 }
